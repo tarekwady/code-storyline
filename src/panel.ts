@@ -135,7 +135,10 @@ export class StorylinePanel {
     private readonly store: StorylineStore,
     private readonly keys: ApiKeys,
   ) {
-    panel.iconPath = vscode.Uri.joinPath(context.extensionUri, "media", "icon.svg");
+    panel.iconPath = {
+      light: vscode.Uri.joinPath(context.extensionUri, "media", "icon-light.svg"),
+      dark: vscode.Uri.joinPath(context.extensionUri, "media", "icon-dark.svg"),
+    };
     panel.webview.html = this.html();
     panel.onDidDispose(() => this.dispose(), null, this.disposables);
     panel.webview.onDidReceiveMessage((msg: FromWebview) => this.onMessage(msg), null, this.disposables);
