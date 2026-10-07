@@ -10,3 +10,5 @@ CONTRIBUTING.md
 .gitignore
 *.vsix
 media/marketplace-icon.svg
+test/**
+.test-build/**

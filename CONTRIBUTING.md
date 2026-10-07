@@ -44,6 +44,8 @@ The diagram is a webview, so its code (`media/main.js`, `media/main.css`) runs i
 | `src/storyline.ts` | Claude API calls: the storyline (prompt, tool schema, validation) and streamed follow-up answers |
 | `src/store.ts` | Saved storylines with history: one JSON file per source file in the extension's global storage, the last 10 versions each, with the file text and the follow-up questions |
 | `src/models.ts` | The model list and picker |
+| `src/time.ts` | Short relative times for the bar and the history list |
+| `test/` | Unit tests; `test/fake-vscode.ts` stands in for the VS Code API so they run in plain Node |
 | `src/apiKey.ts` | The Anthropic API key in VS Code's encrypted secret storage: set, remove, and moving an old key out of settings |
 | `media/main.js` | Webview: card layout, code blocks, the arrows (plain SVG), canvas move and zoom, the ask panel |
 | `src/webview/highlight.ts` | Syntax highlighting for the code blocks (Prism), bundled to `dist/highlight.js` for the webview |
@@ -63,6 +65,7 @@ The diagram is a webview, so its code (`media/main.js`, `media/main.css`) runs i
 | `npm run watch` | Rebuild on every change |
 | `npm run typecheck` | Run the TypeScript compiler without emitting |
 | `npm run compile` | Typecheck, then build |
+| `npm test` | Run the unit tests (storage, checking Claude's storyline, time labels, models) with Node's test runner |
 | `npm run package` | Produce a `.vsix` with `vsce` |
 
 To try a packaged build: `npm run package`, then `code --install-extension code-storyline-<version>.vsix`.
@@ -70,7 +73,7 @@ To try a packaged build: `npm run package`, then `code --install-extension code-
 ## Pull requests
 
 - Keep changes focused, and describe what you changed and how you tested it.
-- Run `npm run compile` before opening the PR; it must pass.
+- Run `npm run compile` and `npm test` before opening the PR; both must pass.
 - For UI changes, include a screenshot or short recording of the storyline panel in both a light and a dark theme.
 
 By contributing you agree that your contributions are licensed under the [MIT License](LICENSE).

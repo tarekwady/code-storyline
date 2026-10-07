@@ -182,7 +182,7 @@ export async function generateStoryline(file: FileContext, signal?: AbortSignal)
   if (!toolUse) {
     throw new StorylineError("Claude didn't send a storyline back.");
   }
-  return normalize(toolUse.input, lines.length);
+  return normalizeStoryline(toolUse.input, lines.length);
 }
 
 /**
@@ -248,8 +248,12 @@ export async function askAboutBlock(opts: {
   }
 }
 
-/** Defensive clean-up: the model output is untrusted shape-wise. */
-function normalize(input: unknown, lineCount: number): Storyline {
+/**
+ * Defensive clean-up: the model output is untrusted shape-wise. Parts are renumbered 1..n in story order,
+ * line ranges are clamped to the file, and connections that point forward, to themselves, to an unknown
+ * part, or twice to the same part are dropped.
+ */
+export function normalizeStoryline(input: unknown, lineCount: number): Storyline {
   const raw = (input as { blocks?: unknown })?.blocks;
   if (!Array.isArray(raw) || raw.length === 0) {
     throw new StorylineError("Claude sent back an empty storyline.");
@@ -259,7 +263,11 @@ function normalize(input: unknown, lineCount: number): Storyline {
 
   // Re-number blocks 1..n in story order and remap connection ids accordingly.
   const idMap = new Map<number, number>();
-  raw.forEach((b, i) => idMap.set(Number((b as StoryBlock).id), i + 1));
+  raw.forEach((b, i) => {
+    // A part without a usable id is known by its position, which is what a connection to it would use.
+    const id = Number((b as StoryBlock)?.id);
+    idMap.set(Number.isFinite(id) ? id : i + 1, i + 1);
+  });
 
   const blocks: StoryBlock[] = raw.map((b: any, i) => {
     const id = i + 1;
