@@ -2,8 +2,7 @@
 
 **Read your code as a story.** a vs code extension that explains any code file step by step, in plain words. click a part to see its code and ask follow-up questions.
 
-<!-- Screen recording goes here: replace the line below with a GIF or MP4, e.g. ![code storyline demo](docs/demo.gif) -->
-> 🎬 **Demo coming soon.** A short screen recording of code storyline in action will live here.
+![code storyline demo: run Show Code Storyline, see the file as a row of parts, click one to light up its code and read a plain-words answer](docs/demo.gif)
 
 ---
 

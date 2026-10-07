@@ -12,3 +12,4 @@ CONTRIBUTING.md
 media/marketplace-icon.svg
 test/**
 .test-build/**
+docs/**
