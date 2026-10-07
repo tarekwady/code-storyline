@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- The Marketplace icon: three story cards on Levra's grey stage, joined by a data arc.
+       The middle card holds a grey code field where only the keywords are blue.
+       Rendered to marketplace-icon.png (256×256). -->
+  <defs>
+    <filter id="lift" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.10" />
+    </filter>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="#eaebed" />
+
+  <path d="M 58 92 Q 128 22 198 92" fill="none" stroke="#7a7a7e" stroke-width="5" stroke-linecap="round" />
+  <path d="M 186 86 L 198 92 L 192 79" fill="none" stroke="#7a7a7e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <g filter="url(#lift)">
+    <rect x="28" y="100" width="58" height="88" rx="11" fill="#ffffff" />
+    <rect x="99" y="100" width="58" height="124" rx="11" fill="#ffffff" />
+    <rect x="170" y="100" width="58" height="76" rx="11" fill="#ffffff" />
+  </g>
+
+  <rect x="38" y="112" width="30" height="7" rx="3.5" fill="#0f0f10" />
+  <rect x="38" y="125" width="38" height="5" rx="2.5" fill="#a8a8ac" />
+  <rect x="38" y="135" width="26" height="5" rx="2.5" fill="#a8a8ac" />
+
+  <rect x="109" y="112" width="34" height="7" rx="3.5" fill="#0f0f10" />
+  <rect x="109" y="125" width="38" height="5" rx="2.5" fill="#a8a8ac" />
+  <rect x="107" y="140" width="42" height="74" rx="6" fill="#f2f3f4" />
+  <rect x="113" y="149" width="14" height="5" rx="2.5" fill="#1a5fd0" />
+  <rect x="130" y="149" width="12" height="5" rx="2.5" fill="#1c1c1e" />
+  <rect x="119" y="161" width="20" height="5" rx="2.5" fill="#1c1c1e" />
+  <rect x="119" y="173" width="12" height="5" rx="2.5" fill="#1a5fd0" />
+  <rect x="134" y="173" width="8" height="5" rx="2.5" fill="#1c1c1e" />
+  <rect x="113" y="185" width="16" height="5" rx="2.5" fill="#1a5fd0" />
+  <rect x="113" y="197" width="8" height="5" rx="2.5" fill="#6e6e72" />
+
+  <rect x="180" y="112" width="28" height="7" rx="3.5" fill="#0f0f10" />
+  <rect x="180" y="125" width="38" height="5" rx="2.5" fill="#a8a8ac" />
+  <rect x="180" y="135" width="30" height="5" rx="2.5" fill="#a8a8ac" />
+</svg>

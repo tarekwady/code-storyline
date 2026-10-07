@@ -9,3 +9,4 @@ esbuild.mjs
 CONTRIBUTING.md
 .gitignore
 *.vsix
+media/marketplace-icon.svg
