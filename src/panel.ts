@@ -22,7 +22,6 @@ type Notice = { text: string; action: "update" } | null;
 
 type ToWebview =
   | { type: "loading"; fileName: string }
-  | { type: "model"; label: string; name: string }
   | {
       type: "storyline";
       fileName: string;
@@ -31,10 +30,7 @@ type ToWebview =
       lines: string[];
       threads: Record<number, Turn[]>;
       pending: Pending | null;
-      made: string;
-      modelLabel: string;
       notice: Notice;
-      versions: number;
     }
   | { type: "notice"; notice: Notice }
   | { type: "error"; fileName?: string; message: string; action?: Action }
@@ -100,6 +96,7 @@ export class StorylinePanel {
         },
       );
       StorylinePanel.current = new StorylinePanel(panel, context, store, keys);
+      void vscode.commands.executeCommand("setContext", "codestoryline.panelOpen", true);
     } else {
       StorylinePanel.current.panel.reveal(vscode.ViewColumn.Beside, true);
     }
@@ -111,6 +108,17 @@ export class StorylinePanel {
   static async chooseModel(): Promise<void> {
     if (StorylinePanel.current) await StorylinePanel.current.pickModel();
     else await chooseModel();
+  }
+
+  /** The "Regenerate Storyline" command. */
+  static async regenerate(): Promise<void> {
+    const panel = StorylinePanel.current;
+    if (panel?.documentUri) await panel.run(await vscode.workspace.openTextDocument(panel.documentUri), "regenerate");
+  }
+
+  /** The "Show History" command. */
+  static async history(): Promise<void> {
+    await StorylinePanel.current?.pickFromHistory();
   }
 
   /** The "Set API Key" command: if a storyline is waiting for a key, it carries on once one is saved. */
@@ -132,7 +140,6 @@ export class StorylinePanel {
     vscode.workspace.onDidChangeConfiguration(
       (e) => {
         if (!e.affectsConfiguration("codestoryline.model")) return;
-        this.postModel();
         this.postNotice();
       },
       null,
@@ -150,7 +157,6 @@ export class StorylinePanel {
     switch (msg.type) {
       case "ready":
         // The webview (re)loaded, e.g. after being hidden: replay the current state.
-        this.postModel();
         if (this.status) void this.panel.webview.postMessage(this.status);
         else if (this.shown) this.postStoryline();
         break;
@@ -192,12 +198,7 @@ export class StorylinePanel {
   private async pickModel(): Promise<void> {
     const model = await chooseModel();
     if (!model) return;
-    this.postModel();
     if (this.documentUri) await this.run(await vscode.workspace.openTextDocument(this.documentUri), "model");
-  }
-
-  private postModel(): void {
-    this.post({ type: "model", ...modelInfo(currentModel()) });
   }
 
   private async run(document: vscode.TextDocument, mode: RunMode): Promise<void> {
@@ -376,10 +377,7 @@ export class StorylinePanel {
       lines: version.text.split(/\r?\n/),
       threads: version.threads,
       pending,
-      made: when(version.createdAt),
-      modelLabel: modelInfo(version.model).label,
       notice: this.notice(),
-      versions: (await this.store.versions(shown.uri)).length,
     });
   }
 
@@ -460,24 +458,8 @@ export class StorylinePanel {
 </head>
 <body>
   <header class="bar">
-    <div class="bar-text">
-      <h1 id="file" class="bar-title">storyline</h1>
-      <p id="meta" class="bar-meta"></p>
-      <p id="notice" class="bar-notice" hidden></p>
-    </div>
-    <button id="history" class="ghost history" type="button" title="Earlier storylines of this file" hidden>
-      history <span id="history-count" class="history-count"></span>
-    </button>
-    <button id="model" class="ghost model" type="button" title="Choose which Claude model explains your code">
-      <span class="model-key">model</span>
-      <span id="model-label" class="model-name"></span>
-      <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-    </button>
-    <div class="legend" aria-label="Line styles">
-      <span class="legend-item"><svg width="22" height="6" aria-hidden="true"><line x1="1" y1="3" x2="21" y2="3" /></svg>data</span>
-      <span class="legend-item"><svg width="22" height="6" aria-hidden="true"><line class="dashed" x1="1" y1="3" x2="21" y2="3" /></svg>calls</span>
-    </div>
-    <button id="regenerate" class="pill" type="button" title="Ask Claude for a fresh storyline. The current one stays in the history.">regenerate</button>
+    <h1 id="file" class="bar-title">storyline</h1>
+    <p id="notice" class="bar-notice" hidden></p>
   </header>
 
   <div class="workspace">
@@ -489,19 +471,6 @@ export class StorylinePanel {
       <svg id="arrows" class="arrows" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
     </div>
   </main>
-
-  <div id="zoom" class="zoom" hidden>
-    <div class="zoom-controls" role="group" aria-label="Zoom">
-      <button id="zoom-out" class="zoom-btn" type="button" aria-label="Zoom out" title="Zoom out (-)">
-        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14" /></svg>
-      </button>
-      <button id="zoom-level" class="zoom-level" type="button" title="Fit the whole storyline (0)">100%</button>
-      <button id="zoom-in" class="zoom-btn" type="button" aria-label="Zoom in" title="Zoom in (+)">
-        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M12 5v14" /></svg>
-      </button>
-    </div>
-    <p id="zoom-hint" class="zoom-hint">drag to move · ctrl + scroll to zoom</p>
-  </div>
 
   <aside id="ask" class="ask" aria-label="Ask about this part" aria-hidden="true" inert>
     <header class="ask-head">
@@ -538,6 +507,7 @@ export class StorylinePanel {
 
   private dispose(): void {
     StorylinePanel.current = undefined;
+    void vscode.commands.executeCommand("setContext", "codestoryline.panelOpen", false);
     this.generating?.abort();
     this.pending?.controller.abort();
     this.highlight.dispose();

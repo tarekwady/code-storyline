@@ -140,16 +140,9 @@ button {
 
 /* ------------------------------------------------------------ bar */
 
+/* The bar: the file name, and a note under it only when the storyline is out of date. */
 .bar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
   padding: 16px 24px 12px;
-}
-
-.bar-text {
-  flex: 1;
-  min-width: 0;
 }
 
 .bar-title {
@@ -162,17 +155,6 @@ button {
   text-overflow: ellipsis;
 }
 
-.bar-meta {
-  margin: 2px 0 0;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0;
-  color: var(--text-2);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .bar-notice {
   margin: 4px 0 0;
   font: 11px/1.6 var(--font-mono);
@@ -180,65 +162,7 @@ button {
   color: var(--text-2);
 }
 
-.legend {
-  display: flex;
-  gap: 14px;
-  font: 11px var(--font-mono);
-  letter-spacing: 0.06em;
-  color: var(--text-2);
-}
-
-.legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.legend line {
-  stroke: var(--line);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-}
-
-.legend line.dashed {
-  stroke-dasharray: 4 3;
-}
-
-@media (max-width: 560px) {
-  .legend {
-    display: none;
-  }
-}
-
 /* ------------------------------------------------------------ controls */
-
-.pill {
-  flex: none;
-  height: 34px;
-  padding: 0 16px;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--fill);
-  color: var(--text);
-  cursor: pointer;
-  transition:
-    background 140ms var(--utility),
-    opacity 160ms var(--utility),
-    transform 160ms var(--spring);
-}
-
-.pill:hover:not(:disabled) {
-  background: var(--fill-hover);
-}
-
-.pill:active:not(:disabled) {
-  transform: scale(0.97);
-}
-
-.pill:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
 
 .ghost {
   height: 28px;
@@ -261,57 +185,6 @@ button {
 
 .ghost:active {
   transform: scale(0.94);
-}
-
-/* The history button: a ghost button with the number of saved storylines in mono. */
-.history {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 34px;
-  color: var(--text);
-}
-
-.history-count {
-  font: 11px var(--font-mono);
-  color: var(--text-2);
-  font-variant-numeric: tabular-nums;
-}
-
-/* The model button: a ghost button with a mono key, the model name and a chevron. */
-.model {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 34px;
-  color: var(--text);
-}
-
-.model-key {
-  font: 700 10px var(--font-mono);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-2);
-}
-
-.model-name {
-  white-space: nowrap;
-}
-
-.model svg path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-@media (max-width: 420px) {
-  .model-key {
-    display: none;
-  }
 }
 
 .text-action {
@@ -438,94 +311,6 @@ button {
 
 .board.animate {
   transition: transform 420ms var(--spring);
-}
-
-/* Zoom controls, bottom left, clear of the ask panel. */
-.zoom {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  pointer-events: none;
-}
-
-.zoom-controls {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 3px;
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-pill);
-  background: var(--surface);
-  box-shadow: var(--shadow-lift);
-  pointer-events: auto;
-}
-
-.zoom-btn,
-.zoom-level {
-  height: 30px;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  cursor: pointer;
-  transition:
-    background 140ms var(--utility),
-    color 140ms var(--utility),
-    transform 160ms var(--spring);
-}
-
-.zoom-btn {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  color: var(--line);
-}
-
-.zoom-btn svg path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-}
-
-.zoom-level {
-  min-width: 52px;
-  padding: 0 6px;
-  color: var(--text);
-  font: 11px var(--font-mono);
-  letter-spacing: 0.02em;
-  font-variant-numeric: tabular-nums;
-}
-
-.zoom-btn:hover,
-.zoom-level:hover {
-  background: var(--wash);
-  color: var(--text);
-}
-
-.zoom-btn:active {
-  transform: scale(0.92);
-}
-
-.zoom-level:active {
-  transform: scale(0.97);
-}
-
-.zoom-hint {
-  margin: 0;
-  font: 11px var(--font-mono);
-  letter-spacing: 0.06em;
-  color: var(--text-2);
-}
-
-@media (max-width: 560px) {
-  .zoom-hint {
-    display: none;
-  }
 }
 
 .arrows {

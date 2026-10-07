@@ -19,6 +19,8 @@ export function activate(context: vscode.ExtensionContext): void {
       StorylinePanel.show(context, store, keys, editor);
     }),
     vscode.commands.registerCommand("codestoryline.chooseModel", () => StorylinePanel.chooseModel()),
+    vscode.commands.registerCommand("codestoryline.regenerate", () => StorylinePanel.regenerate()),
+    vscode.commands.registerCommand("codestoryline.history", () => StorylinePanel.history()),
     vscode.commands.registerCommand("codestoryline.setApiKey", () => StorylinePanel.setApiKey(keys)),
     vscode.commands.registerCommand("codestoryline.removeApiKey", () => keys.remove()),
   );

@@ -16,9 +16,10 @@ Opening an unfamiliar file usually means scrolling up and down trying to work ou
 - **How the pieces connect.** Arrows show which earlier part a step depends on: solid arcs above the row when it uses **data** from there, dashed arcs below when it **calls** code there. Every connection is also written out in words.
 - **Ask about any part.** Click a card and a panel opens. Ask your own question or tap `explain it simpler`, `go one level deeper` or `why is this here?`, then keep going. Answers stream in and point at real line numbers.
 - **Jump to the code when you want to.** If the file is open next to the storyline, clicking a card highlights its lines there. Press `show in code` in the panel to bring the file up at those lines.
-- **Move around like a canvas.** Drag to move, ctrl + scroll (⌘ + scroll on Mac) or pinch to zoom, or use the `−` `100%` `+` buttons. Click `100%` to fit the whole story on screen.
-- **Pick your model.** The `MODEL` button in the top bar lists the Claude models in plain words, with a rough cost for each.
-- **Saved, with history.** Every storyline is saved per file, together with your questions and answers, and survives restarts. Reopening a file shows its saved storyline instantly and for free; if you've edited the file since, a short note offers an `update` instead of spending money on its own. The `history` button lists the last 10 storylines of the file, so you can go back to any of them.
+- **Move around like a canvas.** Drag to move, ctrl + scroll (⌘ + scroll on Mac) or pinch to zoom. Press `0` to fit the whole story on screen, `+` and `-` to zoom.
+- **Nothing in the way.** The panel shows only the file name and the story. Everything else (regenerate, history, model) is in the panel's **…** menu at the top right.
+- **Pick your model.** **Choose Model** lists the Claude models in plain words, with a rough cost for each.
+- **Saved, with history.** Every storyline is saved per file, together with your questions and answers, and survives restarts. Reopening a file shows its saved storyline instantly and for free; if you've edited the file since, a short note offers an `update` instead of spending money on its own. **Show History** lists the last 10 storylines of the file, so you can go back to any of them.
 - **Calm to look at.** A light grey canvas and clean white cards in every VS Code theme. The only colour is in the code: light grey code blocks where just the highlighted words are blue, with a copy button and line numbers.
 - **No backend.** Everything runs inside VS Code. Your code goes straight from your editor to the Anthropic API with your own key, and nowhere else.
 
@@ -40,7 +41,7 @@ Upgrading from an earlier version that kept the key in the `codestoryline.apiKey
 
 ## Choose a model
 
-Click the `MODEL` button in the storyline's top bar, or run **Code Storyline: Choose Model** from the Command Palette. You get a short list:
+Open the **…** menu at the top right of the storyline panel and pick **Choose Model**, or run **Code Storyline: Choose Model** from the Command Palette. You get a short list:
 
 | Model | Good for | Rough cost per storyline* |
 | --- | --- | --- |
@@ -54,7 +55,7 @@ Click the `MODEL` button in the storyline's top bar, or run **Code Storyline: Ch
 
 Choosing a model shows that model's storyline right away. You can also type any other Claude model id, or set `codestoryline.model` in Settings.
 
-> **Privacy note:** making a storyline and asking a follow-up question both send the full contents of the file to the Anthropic API. Don't use it on files you aren't allowed to share with a third-party service. Saved storylines, including a copy of the file text they were made from, stay on your computer in VS Code's private storage for the extension, never in your project. Delete a file's history from its `history` list.
+> **Privacy note:** making a storyline and asking a follow-up question both send the full contents of the file to the Anthropic API. Don't use it on files you aren't allowed to share with a third-party service. Saved storylines, including a copy of the file text they were made from, stay on your computer in VS Code's private storage for the extension, never in your project. Delete a file's history from **Show History**.
 
 Have an idea? [Open an issue](https://github.com/tarekwady/code-storyline/issues).
 

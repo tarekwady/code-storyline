@@ -21,23 +21,17 @@
 
   const el = (/** @type {string} */ id) => /** @type {HTMLElement} */ (document.getElementById(id));
   const fileEl = el("file");
-  const metaEl = el("meta");
   const stateEl = el("state");
   const stageEl = el("stage");
   const boardEl = el("board");
   const svg = /** @type {SVGSVGElement} */ (/** @type {unknown} */ (el("arrows")));
-  const regenerateBtn = /** @type {HTMLButtonElement} */ (el("regenerate"));
   const askEl = el("ask");
   const askScroll = el("ask-scroll");
   const threadEl = el("ask-thread");
   const chipsEl = el("ask-chips");
   const formEl = /** @type {HTMLFormElement} */ (el("ask-form"));
   const questionEl = /** @type {HTMLTextAreaElement} */ (el("question"));
-  const zoomEl = el("zoom");
-  const zoomLevelEl = /** @type {HTMLButtonElement} */ (el("zoom-level"));
-  const modelBtn = el("model");
   const noticeEl = el("notice");
-  const historyBtn = el("history");
 
   /** @type {{fileName:string, languageId:string, storyline:{blocks:Block[]}, lines:string[]} | null} */
   let story = null;
@@ -55,26 +49,18 @@
   window.addEventListener("message", (event) => {
     const msg = event.data;
     switch (msg.type) {
-      case "model":
-        el("model-label").textContent = msg.label;
-        modelBtn.setAttribute("aria-label", `Model: ${msg.name}. Choose another model`);
-        break;
       case "loading":
         story = null;
         closeAsk();
-        setHeader(msg.fileName, "");
+        fileEl.textContent = msg.fileName;
         setNotice(null);
-        historyBtn.hidden = true;
-        regenerateBtn.disabled = true;
         showState(`reading ${msg.fileName}…`, null, true);
         break;
       case "error":
         story = null;
         closeAsk();
-        setHeader(msg.fileName || "storyline", "");
+        fileEl.textContent = msg.fileName || "storyline";
         setNotice(null);
-        historyBtn.hidden = true;
-        regenerateBtn.disabled = false;
         showState(msg.message.toLowerCase(), msg.action || null, false);
         break;
       case "storyline": {
@@ -83,13 +69,8 @@
         threads = msg.threads || {};
         pending = msg.pending;
         failed = null;
-        regenerateBtn.disabled = false;
-        const count = msg.storyline.blocks.length;
-        setHeader(msg.fileName, `${count} parts · made ${msg.made} with ${msg.modelLabel} · click a part to ask about it`);
+        fileEl.textContent = msg.fileName;
         setNotice(msg.notice);
-        historyBtn.hidden = false;
-        el("history-count").textContent = String(msg.versions);
-        historyBtn.setAttribute("aria-label", `History: ${msg.versions} saved storyline${msg.versions === 1 ? "" : "s"} of this file`);
         document.fonts.ready.then(() => {
           renderBoard();
           if (keep && msg.storyline.blocks.some((/** @type {Block} */ b) => b.id === keep)) select(keep, false);
@@ -127,22 +108,10 @@
     }
   });
 
-  regenerateBtn.addEventListener("click", () => vscode.postMessage({ type: "regenerate" }));
-  modelBtn.addEventListener("click", () => vscode.postMessage({ type: "choose-model" }));
-  historyBtn.addEventListener("click", () => vscode.postMessage({ type: "history" }));
   vscode.postMessage({ type: "ready" });
 
   /**
-   * @param {string} title
-   * @param {string} meta
-   */
-  function setHeader(title, meta) {
-    fileEl.textContent = title;
-    metaEl.textContent = meta;
-  }
-
-  /**
-   * The line under the meta line when the storyline on screen is out of date, with one action to update it.
+   * The line under the file name when the storyline on screen is out of date, with one action to update it.
    * @param {{text:string, action:string} | null} notice
    */
   function setNotice(notice) {
@@ -169,7 +138,6 @@
    */
   function showState(text, action, loading) {
     boardEl.hidden = true;
-    zoomEl.hidden = true;
     stageEl.classList.remove("is-canvas");
     stateEl.hidden = false;
     stateEl.replaceChildren();
@@ -214,7 +182,6 @@
     if (!story) return;
     stateEl.hidden = true;
     boardEl.hidden = false;
-    zoomEl.hidden = false;
     stageEl.classList.add("is-canvas");
     boardEl.querySelectorAll(".card").forEach((c) => c.remove());
     svg.replaceChildren();
@@ -441,8 +408,6 @@
     view.y = clamp(view.y, 80 - boardSize.h * view.k, stageEl.clientHeight - 80);
     boardEl.classList.toggle("animate", !!animate);
     boardEl.style.transform = `translate(${view.x}px, ${view.y}px) scale(${view.k})`;
-    zoomLevelEl.textContent = `${Math.round(view.k * 100)}%`;
-    zoomLevelEl.title = isFitted() ? "Back to 100% (0)" : "Fit the whole storyline (0)";
     if (story) {
       vscode.setState({ ...(vscode.getState() || {}), view: { file: story.fileName, parts: story.storyline.blocks.length, ...view } });
     }
@@ -502,9 +467,6 @@
     applyView(false);
   }
 
-  el("zoom-in").addEventListener("click", () => zoomBy(1.25));
-  el("zoom-out").addEventListener("click", () => zoomBy(0.8));
-  zoomLevelEl.addEventListener("click", fitOrReset);
   new ResizeObserver(() => !boardEl.hidden && applyView(false)).observe(stageEl);
 
   // Ctrl/⌘ + wheel and trackpad pinches (which arrive as ctrl + wheel) zoom around the pointer.
@@ -653,9 +615,6 @@
       applyView(true);
     }
   }
-
-  const isMac = /Mac/.test(navigator.platform);
-  el("zoom-hint").textContent = `drag to move \u00b7 ${isMac ? "\u2318" : "ctrl"} + scroll to zoom`;
 
   // ---------------------------------------------------------------- selection and the ask panel
 

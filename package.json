@@ -43,6 +43,18 @@
         "category": "Code Storyline"
       },
       {
+        "command": "codestoryline.regenerate",
+        "title": "Regenerate Storyline",
+        "category": "Code Storyline",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "codestoryline.history",
+        "title": "Show History",
+        "category": "Code Storyline",
+        "icon": "$(history)"
+      },
+      {
         "command": "codestoryline.chooseModel",
         "title": "Choose Model",
         "category": "Code Storyline"
@@ -63,6 +75,31 @@
         {
           "command": "codestoryline.show",
           "when": "editorIsOpen"
+        },
+        {
+          "command": "codestoryline.regenerate",
+          "when": "codestoryline.panelOpen"
+        },
+        {
+          "command": "codestoryline.history",
+          "when": "codestoryline.panelOpen"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "codestoryline.regenerate",
+          "when": "activeWebviewPanelId == 'codestoryline'",
+          "group": "1_storyline@1"
+        },
+        {
+          "command": "codestoryline.history",
+          "when": "activeWebviewPanelId == 'codestoryline'",
+          "group": "1_storyline@2"
+        },
+        {
+          "command": "codestoryline.chooseModel",
+          "when": "activeWebviewPanelId == 'codestoryline'",
+          "group": "1_storyline@3"
         }
       ]
     },
