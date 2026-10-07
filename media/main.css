@@ -1,0 +1,1133 @@
+/* code storyline — webview styles.
+   Tokens follow the code storyline design system, after Levra: one light look on a flat grey stage
+   (it does not follow VS Code's dark themes), clean white cards, greyscale chrome, one sans (Inter)
+   and one mono. The only colour is the code: grey blocks whose highlighted words are blues from one accent, #1a73f2. */
+
+@font-face {
+  font-family: "Inter Variable";
+  src: url("../dist/fonts/inter-latin-opsz-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* colour */
+  --stage: #eaebed;
+  --surface: #ffffff;
+  --fill: #f2f3f4;
+  --fill-hover: #ecedee;
+  --hairline: #e5e5e7;
+  --ring: rgba(0, 0, 0, 0.03);
+  --underline: #c9c9cc;
+  --line: #7a7a7e;
+  --text: #0f0f10;
+  --text-2: #6a6862;
+  --text-3: #8a8880;
+  --ink-fill: #0f0f10;
+  --on-ink: #ffffff;
+  --wash: rgba(0, 0, 0, 0.05);
+  --focus: #0f0f10;
+  --shimmer: rgba(255, 255, 255, 0.7);
+
+  /* code blocks, after rareui: the language's own words and literal values are blue, every name you wrote
+     is dark, and punctuation recedes in grey */
+  --code-accent: #1a73f2;
+  --code-bg: #f2f3f4;
+  --code-head: #ecedee;
+  --code-border: #e5e5e7;
+  --code-highlight: #1a5fd0;
+  --code-text: #1c1c1e;
+  --code-punct: #6e6e72;
+  --code-gutter: #9b9ba0;
+  --code-selection: rgba(26, 115, 242, 0.18);
+
+  /* shadow */
+  --shadow-rest: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-lift: 0 8px 24px -8px rgba(0, 0, 0, 0.12);
+  --shadow-panel: 0 1px 1px rgba(0, 0, 0, 0.04), 0 8px 28px -6px rgba(0, 0, 0, 0.18);
+  --shadow-pill: 0 6px 18px -8px rgba(0, 0, 0, 0.35);
+
+  /* type */
+  --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Mono", Consolas, Menlo, monospace;
+
+  /* radius */
+  --radius-code: 10px;
+  --radius-field: 10px;
+  --radius-card: 12px;
+  --radius-bubble: 14px;
+  --radius-pill: 9999px;
+
+  /* motion */
+  --spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --utility: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* layout */
+  --card-width: 380px;
+  --panel-width: 400px;
+
+  color-scheme: light;
+}
+
+/* VS Code injects its own default styles into every webview: body padding, theme-coloured scrollbars,
+   the editor's colour scheme and a dark background on <code>. This panel is always light, so undo them. */
+html {
+  color-scheme: light !important;
+  scrollbar-color: var(--underline) transparent;
+  scrollbar-width: thin;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  background: var(--stage);
+  color: var(--text);
+  font: 500 13px/1.4 var(--font-sans);
+  letter-spacing: -0.01em;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+button {
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+:focus-visible {
+  outline: 1px solid var(--focus);
+  outline-offset: -1px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--hairline);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ------------------------------------------------------------ bar */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px 12px;
+}
+
+.bar-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.bar-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-meta {
+  margin: 2px 0 0;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-notice {
+  margin: 4px 0 0;
+  font: 11px/1.6 var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+
+.legend {
+  display: flex;
+  gap: 14px;
+  font: 11px var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend line {
+  stroke: var(--line);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.legend line.dashed {
+  stroke-dasharray: 4 3;
+}
+
+@media (max-width: 560px) {
+  .legend {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------ controls */
+
+.pill {
+  flex: none;
+  height: 34px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--fill);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background 140ms var(--utility),
+    opacity 160ms var(--utility),
+    transform 160ms var(--spring);
+}
+
+.pill:hover:not(:disabled) {
+  background: var(--fill-hover);
+}
+
+.pill:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.pill:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.ghost {
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-field);
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition:
+    background 140ms var(--utility),
+    color 140ms var(--utility),
+    transform 160ms var(--spring);
+}
+
+.ghost:hover {
+  background: var(--wash);
+  color: var(--text);
+}
+
+.ghost:active {
+  transform: scale(0.94);
+}
+
+/* The history button: a ghost button with the number of saved storylines in mono. */
+.history {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  color: var(--text);
+}
+
+.history-count {
+  font: 11px var(--font-mono);
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The model button: a ghost button with a mono key, the model name and a chevron. */
+.model {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  color: var(--text);
+}
+
+.model-key {
+  font: 700 10px var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.model-name {
+  white-space: nowrap;
+}
+
+.model svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 420px) {
+  .model-key {
+    display: none;
+  }
+}
+
+.text-action {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--underline);
+  cursor: pointer;
+  transition: text-decoration-color 140ms var(--utility);
+}
+
+.text-action:hover {
+  text-decoration-color: var(--text);
+}
+
+.label {
+  margin: 0;
+  font: 700 11px/1.2 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+/* ------------------------------------------------------------ stage and states */
+
+/* The stage and the ask panel share the space below the bar. */
+.workspace {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.stage {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.stage.is-canvas {
+  cursor: grab;
+}
+
+.stage.is-moving,
+.stage.is-moving * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+
+.state {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 24px;
+  min-height: 100%;
+  padding: 48px 24px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.state-line {
+  max-width: 440px;
+  margin: 0;
+  font: 11px/1.7 var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+
+.placeholders {
+  display: flex;
+  gap: 32px;
+}
+
+.placeholder {
+  position: relative;
+  width: 180px;
+  height: 220px;
+  overflow: hidden;
+  background: var(--fill);
+}
+
+/* The one loading animation: a band of light travelling across empty cards. */
+.placeholder::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 20%, var(--shimmer) 50%, transparent 80%);
+  transform: translateX(-100%);
+  animation: travel 1.6s var(--utility) infinite;
+}
+
+.placeholder:nth-child(2)::after {
+  animation-delay: 0.15s;
+}
+
+.placeholder:nth-child(3)::after {
+  animation-delay: 0.3s;
+}
+
+@keyframes travel {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (max-width: 640px) {
+  .placeholder:nth-child(3) {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------ board */
+
+.board {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.board.animate {
+  transition: transform 420ms var(--spring);
+}
+
+/* Zoom controls, bottom left, clear of the ask panel. */
+.zoom {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  box-shadow: var(--shadow-lift);
+  pointer-events: auto;
+}
+
+.zoom-btn,
+.zoom-level {
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 140ms var(--utility),
+    color 140ms var(--utility),
+    transform 160ms var(--spring);
+}
+
+.zoom-btn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  color: var(--line);
+}
+
+.zoom-btn svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+
+.zoom-level {
+  min-width: 52px;
+  padding: 0 6px;
+  color: var(--text);
+  font: 11px var(--font-mono);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.zoom-btn:hover,
+.zoom-level:hover {
+  background: var(--wash);
+  color: var(--text);
+}
+
+.zoom-btn:active {
+  transform: scale(0.92);
+}
+
+.zoom-level:active {
+  transform: scale(0.97);
+}
+
+.zoom-hint {
+  margin: 0;
+  font: 11px var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+
+@media (max-width: 560px) {
+  .zoom-hint {
+    display: none;
+  }
+}
+
+.sketch {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.sketch .edge {
+  transition: opacity 160ms var(--utility);
+}
+
+.sketch .edge.dim {
+  opacity: 0.15;
+}
+
+.edge-line,
+.edge-head {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.edge-call .edge-line {
+  stroke-dasharray: 5 5;
+}
+
+.edge-label {
+  font: 10px var(--font-mono);
+  letter-spacing: 0.06em;
+  fill: var(--text-2);
+  paint-order: stroke;
+  stroke: var(--stage);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  pointer-events: auto;
+  cursor: help;
+}
+
+/* ------------------------------------------------------------ card */
+
+.card {
+  position: absolute;
+  box-sizing: border-box;
+  width: var(--card-width);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px 18px;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--ring),
+    var(--shadow-rest);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 220ms var(--spring),
+    box-shadow 220ms var(--spring);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px var(--ring),
+    var(--shadow-lift);
+}
+
+/* Selected: a 1.5px ink ring, lifted. */
+.card.is-selected {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1.5px var(--text),
+    var(--shadow-lift);
+}
+
+.card:focus-visible {
+  outline-offset: 4px;
+}
+
+.card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.lines {
+  font: 11px var(--font-mono);
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.card-text {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+}
+
+/* ------------------------------------------------------------ code block */
+
+.codeblock {
+  margin: 4px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius-code);
+  background: var(--code-bg);
+  cursor: auto;
+}
+
+.codeblock-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 32px;
+  padding: 0 6px 0 12px;
+  border-bottom: 1px solid var(--code-border);
+  background: var(--code-head);
+  color: var(--code-punct);
+  font: 11px var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.codeblock-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.codeblock-copy {
+  flex: none;
+  height: 22px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--code-punct);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background 140ms var(--utility),
+    color 140ms var(--utility),
+    transform 160ms var(--spring);
+}
+
+.codeblock-copy:hover {
+  background: var(--wash);
+  color: var(--code-text);
+}
+
+.codeblock-copy:active {
+  transform: scale(0.94);
+}
+
+.codeblock-copy:focus-visible {
+  outline-color: var(--code-text);
+}
+
+.code {
+  display: flex;
+  max-height: 264px;
+  overflow: auto;
+  font: 11.5px/1.6 var(--font-mono);
+  letter-spacing: 0;
+  tab-size: 2;
+  cursor: text;
+  user-select: text;
+}
+
+.code {
+  scrollbar-color: var(--underline) transparent;
+}
+
+.code-gutter {
+  position: sticky;
+  left: 0;
+  flex: none;
+  margin: 0;
+  padding: 10px 10px 10px 12px;
+  background: var(--code-bg);
+  color: var(--code-gutter);
+  font: inherit;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.code-text {
+  flex: 1;
+  margin: 0;
+  padding: 10px 14px 10px 4px;
+  color: var(--code-text);
+  font: inherit;
+}
+
+/* Without line numbers (answers), the code gets the full left padding. */
+.code-text:first-child {
+  padding-left: 14px;
+}
+
+.code-text code {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  white-space: pre;
+}
+
+.code ::selection {
+  background: var(--code-selection);
+}
+
+/* Highlighting, after rareui's code block. Three levels:
+   blue  – the language's own words and literal values: keywords, strings, numbers, booleans, regexes, tag names
+   dark  – every name you wrote: variables, functions, classes, types, properties (attribute names in italics)
+   grey  – punctuation and operators, which recede; comments in grey italics */
+.token.keyword,
+.token.atrule,
+.token.important,
+.token.string,
+.token.char,
+.token.attr-value,
+.token.regex,
+.token.url,
+.token.number,
+.token.boolean,
+.token.symbol,
+.token.tag {
+  color: var(--code-highlight);
+}
+
+.token.function,
+.token.class-name,
+.token.builtin,
+.token.constant,
+.token.property,
+.token.variable,
+.token.parameter,
+.token.selector,
+.token.interpolation,
+.token.script {
+  color: var(--code-text);
+}
+
+.token.attr-name {
+  color: var(--code-text);
+  font-style: italic;
+}
+
+.token.punctuation,
+.token.operator {
+  color: var(--code-punct);
+}
+
+/* The quotes of a string stay with the string; only the = before it is punctuation. */
+.token.attr-value > .token.punctuation:not(.attr-equals) {
+  color: inherit;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--code-punct);
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------ ask panel */
+
+.ask {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  width: min(var(--panel-width), calc(100vw - 24px));
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+  background: var(--surface);
+  box-shadow: var(--shadow-panel);
+  transform: translateX(102%);
+  visibility: hidden;
+  transition:
+    transform 420ms var(--spring),
+    visibility 0s linear 420ms;
+}
+
+.ask.open {
+  transform: none;
+  visibility: visible;
+  transition:
+    transform 420ms var(--spring),
+    visibility 0s;
+}
+
+.ask-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 14px 0 24px;
+}
+
+.ask-actions {
+  flex: none;
+  display: flex;
+  gap: 2px;
+}
+
+.ask-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 8px 24px 24px;
+}
+
+.ask-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+.ask-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+}
+
+.ask-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 16px -10px 0;
+}
+
+.ask-links:empty {
+  display: none;
+}
+
+.link-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-field);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 140ms var(--utility),
+    transform 160ms var(--spring);
+}
+
+.link-row:hover {
+  background: var(--wash);
+}
+
+.link-row:active {
+  transform: scale(0.97);
+}
+
+.link-text {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+}
+
+.thread:empty {
+  display: none;
+}
+
+.q {
+  align-self: flex-end;
+  max-width: 85%;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: var(--radius-bubble);
+  background: var(--fill);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.q.is-failed {
+  opacity: 0.6;
+}
+
+.a {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  overflow-wrap: anywhere;
+}
+
+.a p,
+.a ol,
+.a ul,
+.a pre {
+  margin: 0 0 10px;
+}
+
+.a > :last-child {
+  margin-bottom: 0;
+}
+
+.a ol,
+.a ul {
+  padding-left: 20px;
+}
+
+.a li + li {
+  margin-top: 4px;
+}
+
+.a strong {
+  font-weight: 600;
+}
+
+.a :not(pre) > code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--fill);
+  color: var(--text);
+  font: 12.5px var(--font-mono);
+  letter-spacing: 0;
+}
+
+.a .codeblock {
+  margin: 0 0 10px;
+}
+
+.a .code {
+  max-height: 320px;
+  font-size: 12px;
+}
+
+.thinking,
+.a-error {
+  margin: 0;
+  font: 11px/1.7 var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+
+.ask-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--hairline);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  height: 28px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--fill);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  transition:
+    background 140ms var(--utility),
+    opacity 160ms var(--utility),
+    transform 160ms var(--spring);
+}
+
+.chip:hover:not(:disabled) {
+  background: var(--fill-hover);
+}
+
+.chip:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.chip:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 5px 5px 5px 14px;
+  border-radius: var(--radius-bubble);
+  background: var(--fill);
+  transition: box-shadow 140ms var(--utility);
+}
+
+.composer:focus-within {
+  box-shadow: inset 0 0 0 1.5px var(--focus);
+}
+
+.composer textarea {
+  flex: 1;
+  min-width: 0;
+  max-height: 120px;
+  padding: 6px 0;
+  border: 0;
+  outline: none;
+  resize: none;
+  background: transparent;
+  color: var(--text);
+  font: 500 13px/1.45 var(--font-sans);
+  letter-spacing: -0.01em;
+}
+
+.composer textarea::placeholder {
+  color: var(--text-2);
+}
+
+.send {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--ink-fill);
+  color: var(--on-ink);
+  box-shadow: var(--shadow-pill);
+  cursor: pointer;
+  transition:
+    opacity 160ms var(--utility),
+    transform 220ms var(--spring);
+}
+
+.send svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.send:active {
+  transform: scale(0.92);
+}
+
+/* The send button is absent until there is something to send. */
+.composer:not(.has-text) .send {
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------ reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0s !important;
+  }
+}

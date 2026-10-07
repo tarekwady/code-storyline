@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // F5 runs this one: the test window without the debugger attached. On some machines the
+      // debugger crashes the Extension Development Host a second after it starts.
+      "name": "Run Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "noDebug": true,
+      // --disable-extensions: load only this extension in the test window, so other installed
+      // extensions can't interfere with it.
+      "args": ["--disable-extensions", "--extensionDevelopmentPath=${workspaceFolder}"],
+      "preLaunchTask": "build"
+    },
+    {
+      // Same window with the debugger, for breakpoints in src/*.ts.
+      "name": "Debug Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": ["--disable-extensions", "--extensionDevelopmentPath=${workspaceFolder}"],
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "preLaunchTask": "build"
+    }
+  ]
+}

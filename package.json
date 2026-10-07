@@ -1,0 +1,94 @@
+{
+  "name": "code-storyline",
+  "displayName": "code storyline",
+  "description": "Read your code as a story: AI breaks a file into its logical moments and lays them out left to right as a storyline, each part with a plain sentence and its code.",
+  "version": "0.1.0",
+  "publisher": "your-publisher-id",
+  "license": "MIT",
+  "author": "Tarek",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tarekwady/code-storyline.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tarekwady/code-storyline/issues"
+  },
+  "homepage": "https://github.com/tarekwady/code-storyline#readme",
+  "keywords": [
+    "code understanding",
+    "diagram",
+    "onboarding",
+    "claude",
+    "ai",
+    "visualization"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "codestoryline.show",
+        "title": "Show Code Storyline",
+        "category": "Code Storyline"
+      },
+      {
+        "command": "codestoryline.chooseModel",
+        "title": "Choose Model",
+        "category": "Code Storyline"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "codestoryline.show",
+          "when": "editorIsOpen"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Code Storyline",
+      "properties": {
+        "codestoryline.apiKey": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "markdownDescription": "Your Anthropic API key (get one at [console.anthropic.com](https://console.anthropic.com/)). Stored in your user settings only. If empty, the `ANTHROPIC_API_KEY` environment variable is used."
+        },
+        "codestoryline.model": {
+          "type": "string",
+          "default": "claude-sonnet-5-5",
+          "scope": "application",
+          "markdownDescription": "The Claude model that explains your code. [Choose from a list](command:codestoryline.chooseModel) with plain descriptions and rough costs, or type any Claude model id here."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build -- --production",
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "compile": "npm run typecheck && npm run build",
+    "package": "vsce package --no-dependencies",
+    "publish": "vsce publish --no-dependencies"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0"
+  },
+  "devDependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@types/node": "^20.0.0",
+    "@types/prismjs": "^1.26.6",
+    "@types/vscode": "~1.90.0",
+    "@vscode/vsce": "^4.0.0",
+    "esbuild": "^0.28.2",
+    "prismjs": "^1.30.0",
+    "typescript": "^5.9.0"
+  }
+}

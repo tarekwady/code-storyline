@@ -1,0 +1,36 @@
+{
+  "version": "2.0.0",
+  // Shell tasks rather than "npm" tasks so Windows can run them through cmd.exe:
+  // PowerShell's default execution policy blocks npm.ps1.
+  "windows": {
+    "options": {
+      "shell": { "executable": "cmd.exe", "args": ["/d", "/c"] }
+    }
+  },
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "npm run build",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": [],
+      "presentation": { "reveal": "silent" }
+    },
+    {
+      "label": "watch",
+      "type": "shell",
+      "command": "npm run watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "esbuild",
+        "pattern": { "regexp": "^✘ \\[ERROR\\] (.*)$", "message": 1 },
+        "background": {
+          "activesBegin": "^\\[watch\\] build started",
+          "beginsPattern": "^\\[watch\\] build started",
+          "endsPattern": "^\\[watch\\] build finished"
+        }
+      },
+      "presentation": { "reveal": "never" }
+    }
+  ]
+}
