@@ -140,9 +140,17 @@ button {
 
 /* ------------------------------------------------------------ bar */
 
-/* The bar: the file name, and a note under it only when the storyline is out of date. */
+/* The bar: the file name (with a note under it only when the storyline is out of date), then history and model. */
 .bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   padding: 16px 24px 12px;
+}
+
+.bar-text {
+  flex: 1;
+  min-width: 0;
 }
 
 .bar-title {
@@ -185,6 +193,57 @@ button {
 
 .ghost:active {
   transform: scale(0.94);
+}
+
+/* The history button: a ghost button with the number of saved storylines in mono. */
+.history {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  color: var(--text);
+}
+
+.history-count {
+  font: 11px var(--font-mono);
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The model button: a ghost button with a mono key, the model name and a chevron. */
+.model {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  color: var(--text);
+}
+
+.model-key {
+  font: 700 10px var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.model-name {
+  white-space: nowrap;
+}
+
+.model svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 420px) {
+  .model-key {
+    display: none;
+  }
 }
 
 .text-action {

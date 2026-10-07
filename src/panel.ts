@@ -22,6 +22,7 @@ type Notice = { text: string; action: "update" } | null;
 
 type ToWebview =
   | { type: "loading"; fileName: string }
+  | { type: "model"; label: string; name: string }
   | {
       type: "storyline";
       fileName: string;
@@ -31,6 +32,7 @@ type ToWebview =
       threads: Record<number, Turn[]>;
       pending: Pending | null;
       notice: Notice;
+      versions: number;
     }
   | { type: "notice"; notice: Notice }
   | { type: "error"; fileName?: string; message: string; action?: Action }
@@ -140,6 +142,7 @@ export class StorylinePanel {
     vscode.workspace.onDidChangeConfiguration(
       (e) => {
         if (!e.affectsConfiguration("codestoryline.model")) return;
+        this.postModel();
         this.postNotice();
       },
       null,
@@ -157,6 +160,7 @@ export class StorylinePanel {
     switch (msg.type) {
       case "ready":
         // The webview (re)loaded, e.g. after being hidden: replay the current state.
+        this.postModel();
         if (this.status) void this.panel.webview.postMessage(this.status);
         else if (this.shown) this.postStoryline();
         break;
@@ -198,7 +202,12 @@ export class StorylinePanel {
   private async pickModel(): Promise<void> {
     const model = await chooseModel();
     if (!model) return;
+    this.postModel();
     if (this.documentUri) await this.run(await vscode.workspace.openTextDocument(this.documentUri), "model");
+  }
+
+  private postModel(): void {
+    this.post({ type: "model", ...modelInfo(currentModel()) });
   }
 
   private async run(document: vscode.TextDocument, mode: RunMode): Promise<void> {
@@ -378,6 +387,7 @@ export class StorylinePanel {
       threads: version.threads,
       pending,
       notice: this.notice(),
+      versions: (await this.store.versions(shown.uri)).length,
     });
   }
 
@@ -458,8 +468,18 @@ export class StorylinePanel {
 </head>
 <body>
   <header class="bar">
-    <h1 id="file" class="bar-title">storyline</h1>
-    <p id="notice" class="bar-notice" hidden></p>
+    <div class="bar-text">
+      <h1 id="file" class="bar-title">storyline</h1>
+      <p id="notice" class="bar-notice" hidden></p>
+    </div>
+    <button id="history" class="ghost history" type="button" title="Earlier storylines of this file" hidden>
+      history <span id="history-count" class="history-count"></span>
+    </button>
+    <button id="model" class="ghost model" type="button" title="Choose which Claude model explains your code">
+      <span class="model-key">model</span>
+      <span id="model-label" class="model-name"></span>
+      <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+    </button>
   </header>
 
   <div class="workspace">

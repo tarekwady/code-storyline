@@ -32,6 +32,8 @@
   const formEl = /** @type {HTMLFormElement} */ (el("ask-form"));
   const questionEl = /** @type {HTMLTextAreaElement} */ (el("question"));
   const noticeEl = el("notice");
+  const historyBtn = el("history");
+  const modelBtn = el("model");
 
   /** @type {{fileName:string, languageId:string, storyline:{blocks:Block[]}, lines:string[]} | null} */
   let story = null;
@@ -49,11 +51,16 @@
   window.addEventListener("message", (event) => {
     const msg = event.data;
     switch (msg.type) {
+      case "model":
+        el("model-label").textContent = msg.label;
+        modelBtn.setAttribute("aria-label", `Model: ${msg.name}. Choose another model`);
+        break;
       case "loading":
         story = null;
         closeAsk();
         fileEl.textContent = msg.fileName;
         setNotice(null);
+        historyBtn.hidden = true;
         showState(`reading ${msg.fileName}…`, null, true);
         break;
       case "error":
@@ -61,6 +68,7 @@
         closeAsk();
         fileEl.textContent = msg.fileName || "storyline";
         setNotice(null);
+        historyBtn.hidden = true;
         showState(msg.message.toLowerCase(), msg.action || null, false);
         break;
       case "storyline": {
@@ -71,6 +79,9 @@
         failed = null;
         fileEl.textContent = msg.fileName;
         setNotice(msg.notice);
+        historyBtn.hidden = false;
+        el("history-count").textContent = String(msg.versions);
+        historyBtn.setAttribute("aria-label", `History: ${msg.versions} saved storyline${msg.versions === 1 ? "" : "s"} of this file`);
         document.fonts.ready.then(() => {
           renderBoard();
           if (keep && msg.storyline.blocks.some((/** @type {Block} */ b) => b.id === keep)) select(keep, false);
@@ -108,6 +119,8 @@
     }
   });
 
+  historyBtn.addEventListener("click", () => vscode.postMessage({ type: "history" }));
+  modelBtn.addEventListener("click", () => vscode.postMessage({ type: "choose-model" }));
   vscode.postMessage({ type: "ready" });
 
   /**

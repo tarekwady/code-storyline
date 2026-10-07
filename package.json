@@ -90,16 +90,6 @@
           "command": "codestoryline.regenerate",
           "when": "activeWebviewPanelId == 'codestoryline'",
           "group": "1_storyline@1"
-        },
-        {
-          "command": "codestoryline.history",
-          "when": "activeWebviewPanelId == 'codestoryline'",
-          "group": "1_storyline@2"
-        },
-        {
-          "command": "codestoryline.chooseModel",
-          "when": "activeWebviewPanelId == 'codestoryline'",
-          "group": "1_storyline@3"
         }
       ]
     },
