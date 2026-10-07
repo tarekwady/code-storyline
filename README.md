@@ -24,7 +24,7 @@ Opening an unfamiliar file usually means scrolling up and down trying to work ou
 
 ## Install
 
-1. Install **code storyline** from the VS Code Marketplace (or run `code --install-extension code-storyline-<version>.vsix` with a downloaded build).
+1. Install **[code storyline from the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=tarekwady.code-storyline)**: search "code storyline" in the Extensions view, or run `code --install-extension tarekwady.code-storyline`.
 2. Open any file, press `Ctrl+Shift+P` / `Cmd+Shift+P` and run **Show Code Storyline**.
 
 ## Set your API key
