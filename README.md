@@ -56,18 +56,6 @@ Choosing a model shows that model's storyline right away. You can also type any 
 
 > **Privacy note:** making a storyline and asking a follow-up question both send the full contents of the file to the Anthropic API. Don't use it on files you aren't allowed to share with a third-party service. Saved storylines, including a copy of the file text they were made from, stay on your computer in VS Code's private storage for the extension, never in your project. Delete a file's history from its `history` list.
 
-## Roadmap
-
-- [ ] A list of every file that has a saved storyline
-- [ ] Share storylines with your team by saving them in the project
-- [ ] Storylines for a selection, a folder, or a whole pull request diff
-- [ ] Follow the cursor: highlight the box for the code you're currently reading
-- [ ] Mark stale storylines when the file changes, and refresh incrementally
-- [ ] Export the diagram as SVG or PNG for docs and code reviews
-- [ ] Better layout for very large files (zoom, minimap, collapsible groups)
-- [ ] Cross-file storylines that follow calls into imported modules
-- [ ] Localised explanations
-
 Have an idea? [Open an issue](https://github.com/tarekwady/code-storyline/issues).
 
 ## Contributing
