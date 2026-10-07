@@ -3,7 +3,7 @@
   "displayName": "code storyline",
   "description": "Read your code as a story: AI breaks a file into its logical moments and lays them out left to right as a storyline, each part with a plain sentence and its code.",
   "version": "0.1.0",
-  "publisher": "your-publisher-id",
+  "publisher": "tarekwady",
   "icon": "media/marketplace-icon.png",
   "galleryBanner": {
     "color": "#EAEBED",
