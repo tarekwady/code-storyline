@@ -1,6 +1,6 @@
 # code storyline
 
-**Read your code as a story.** code storyline breaks the file you have open into a few parts and lays them out left to right on a calm grey canvas, each with one plain sentence and its exact code. Click any part to keep asking about it, simpler or deeper, until it makes sense.
+**Read your code as a story.** a vs code extension that explains any code file step by step, in plain words. click a part to see its code and ask follow-up questions.
 
 <!-- Screen recording goes here: replace the line below with a GIF or MP4, e.g. ![code storyline demo](docs/demo.gif) -->
 > 🎬 **Demo coming soon.** A short screen recording of code storyline in action will live here.
