@@ -25,7 +25,7 @@
   const stateEl = el("state");
   const stageEl = el("stage");
   const boardEl = el("board");
-  const svg = /** @type {SVGSVGElement} */ (/** @type {unknown} */ (el("sketch")));
+  const svg = /** @type {SVGSVGElement} */ (/** @type {unknown} */ (el("arrows")));
   const regenerateBtn = /** @type {HTMLButtonElement} */ (el("regenerate"));
   const askEl = el("ask");
   const askScroll = el("ask-scroll");

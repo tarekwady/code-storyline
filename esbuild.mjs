@@ -1,12 +1,11 @@
 import * as esbuild from "esbuild";
-import { copyFileSync, mkdirSync, rmSync } from "node:fs";
+import { copyFileSync, mkdirSync } from "node:fs";
 
 const production = process.argv.includes("--production");
 const watch = process.argv.includes("--watch");
 
 // The Inter font runs inside the webview, so ship it next to the extension.
 mkdirSync("dist/fonts", { recursive: true });
-rmSync("dist/rough.js", { force: true }); // left over from the hand-drawn version
 const inter = "node_modules/@fontsource-variable/inter";
 copyFileSync(`${inter}/files/inter-latin-opsz-normal.woff2`, "dist/fonts/inter-latin-opsz-normal.woff2");
 copyFileSync(`${inter}/LICENSE`, "dist/fonts/Inter-OFL.txt");

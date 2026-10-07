@@ -486,7 +486,7 @@ export class StorylinePanel {
       <p class="state-line">open a file, then run show code storyline.</p>
     </div>
     <div id="board" class="board" hidden>
-      <svg id="sketch" class="sketch" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+      <svg id="arrows" class="arrows" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
     </div>
   </main>
 

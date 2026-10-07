@@ -528,18 +528,18 @@ button {
   }
 }
 
-.sketch {
+.arrows {
   position: absolute;
   inset: 0;
   overflow: visible;
   pointer-events: none;
 }
 
-.sketch .edge {
+.arrows .edge {
   transition: opacity 160ms var(--utility);
 }
 
-.sketch .edge.dim {
+.arrows .edge.dim {
   opacity: 0.15;
 }
 
