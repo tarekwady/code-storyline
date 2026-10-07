@@ -31,18 +31,12 @@ Opening an unfamiliar file usually means scrolling up and down trying to work ou
 
 code storyline uses Claude, so it needs an [Anthropic API key](https://console.anthropic.com/).
 
-1. Open Settings (`Ctrl+,` / `Cmd+,`) and search for **codestoryline.apiKey**.
-2. Paste your key.
+1. Press `Ctrl+Shift+P` / `Cmd+Shift+P` and run **Code Storyline: Set API Key**.
+2. Paste your key into the hidden box and press Enter.
 
-Or add it to your user `settings.json`:
+The key is kept in VS Code's encrypted secret storage on your computer, never in `settings.json` (which is plain text and may be synced to the cloud). If you run **Show Code Storyline** without a key, the panel offers `set api key` too. **Code Storyline: Remove API Key** deletes it again. Without a stored key, the extension uses the `ANTHROPIC_API_KEY` environment variable.
 
-```json
-{
-  "codestoryline.apiKey": "sk-ant-..."
-}
-```
-
-The setting is application-scoped, so it lives in your user settings and never ends up in a workspace `.vscode/settings.json` that you might commit. If the setting is empty, the extension falls back to the `ANTHROPIC_API_KEY` environment variable.
+Upgrading from an earlier version that kept the key in the `codestoryline.apiKey` setting? It's moved into the encrypted storage and removed from your settings automatically.
 
 ## Choose a model
 
@@ -64,7 +58,6 @@ Choosing a model shows that model's storyline right away. You can also type any 
 
 ## Roadmap
 
-- [ ] Store the API key in VS Code's encrypted SecretStorage instead of settings
 - [ ] A list of every file that has a saved storyline
 - [ ] Share storylines with your team by saving them in the project
 - [ ] Storylines for a selection, a folder, or a whole pull request diff

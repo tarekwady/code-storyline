@@ -1,9 +1,12 @@
 import * as vscode from "vscode";
+import { ApiKeys } from "./apiKey";
 import { StorylinePanel } from "./panel";
 import { StorylineStore } from "./store";
 
 export function activate(context: vscode.ExtensionContext): void {
   const store = new StorylineStore(context.globalStorageUri);
+  const keys = new ApiKeys(context.secrets);
+  void keys.moveFromSettings();
   void removeOldCache(context.globalState);
 
   context.subscriptions.push(
@@ -13,9 +16,11 @@ export function activate(context: vscode.ExtensionContext): void {
         void vscode.window.showInformationMessage("Open a file first, then run Show Code Storyline.");
         return;
       }
-      StorylinePanel.show(context, store, editor);
+      StorylinePanel.show(context, store, keys, editor);
     }),
     vscode.commands.registerCommand("codestoryline.chooseModel", () => StorylinePanel.chooseModel()),
+    vscode.commands.registerCommand("codestoryline.setApiKey", () => StorylinePanel.setApiKey(keys)),
+    vscode.commands.registerCommand("codestoryline.removeApiKey", () => keys.remove()),
   );
 }
 

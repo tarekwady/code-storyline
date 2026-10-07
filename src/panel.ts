@@ -1,5 +1,6 @@
 import * as path from "node:path";
 import * as vscode from "vscode";
+import type { ApiKeys } from "./apiKey";
 import { chooseModel, currentModel, modelInfo } from "./models";
 import { hashText, type StorylineStore, type Version } from "./store";
 import {
@@ -13,8 +14,8 @@ import {
 } from "./storyline";
 
 type Pending = { blockId: number; text: string };
-/** What the webview offers next to a message: open settings, try again, or make a (new) storyline. */
-type Action = "settings" | "retry" | "make";
+/** What the webview offers next to a message: set the API key, choose a model, try again, or make a (new) storyline. */
+type Action = "key" | "model" | "retry" | "make";
 /** A line under the meta line when the storyline on screen no longer matches the file or settings. */
 type Notice = { text: string; action: "update" } | null;
 
@@ -44,7 +45,7 @@ type FromWebview =
   | { type: "ready" }
   | { type: "regenerate" }
   | { type: "history" }
-  | { type: "open-settings" }
+  | { type: "set-key" }
   | { type: "choose-model" }
   | { type: "reveal"; startLine: number; endLine: number; open: boolean }
   | { type: "unhighlight" }
@@ -83,7 +84,7 @@ export class StorylinePanel {
   private generating: AbortController | undefined;
   private pending: (Pending & { versionId: string; controller: AbortController }) | undefined;
 
-  static show(context: vscode.ExtensionContext, store: StorylineStore, editor: vscode.TextEditor): void {
+  static show(context: vscode.ExtensionContext, store: StorylineStore, keys: ApiKeys, editor: vscode.TextEditor): void {
     if (!StorylinePanel.current) {
       const panel = vscode.window.createWebviewPanel(
         "codestoryline",
@@ -97,7 +98,7 @@ export class StorylinePanel {
           ],
         },
       );
-      StorylinePanel.current = new StorylinePanel(panel, context, store);
+      StorylinePanel.current = new StorylinePanel(panel, context, store, keys);
     } else {
       StorylinePanel.current.panel.reveal(vscode.ViewColumn.Beside, true);
     }
@@ -111,10 +112,17 @@ export class StorylinePanel {
     else await chooseModel();
   }
 
+  /** The "Set API Key" command: if a storyline is waiting for a key, it carries on once one is saved. */
+  static async setApiKey(keys: ApiKeys): Promise<void> {
+    if (StorylinePanel.current) await StorylinePanel.current.askForKey();
+    else await keys.set();
+  }
+
   private constructor(
     private readonly panel: vscode.WebviewPanel,
     private readonly context: vscode.ExtensionContext,
     private readonly store: StorylineStore,
+    private readonly keys: ApiKeys,
   ) {
     panel.iconPath = vscode.Uri.joinPath(context.extensionUri, "media", "icon.svg");
     panel.webview.html = this.html();
@@ -154,8 +162,8 @@ export class StorylinePanel {
       case "choose-model":
         await this.pickModel();
         break;
-      case "open-settings":
-        void vscode.commands.executeCommand("workbench.action.openSettings", "codestoryline");
+      case "set-key":
+        await this.askForKey();
         break;
       case "reveal":
         await this.reveal(msg.startLine, msg.endLine, msg.open);
@@ -172,8 +180,11 @@ export class StorylinePanel {
     }
   }
 
-  private apiKey(): string {
-    return vscode.workspace.getConfiguration("codestoryline").get<string>("apiKey") || process.env.ANTHROPIC_API_KEY || "";
+  /** Asks for the key; if the panel was stopped by a missing or rejected key, tries again with the new one. */
+  private async askForKey(): Promise<void> {
+    if (!(await this.keys.set())) return;
+    const waiting = this.status?.type === "error" && this.status.action === "key";
+    if (waiting && this.documentUri) await this.run(await vscode.workspace.openTextDocument(this.documentUri), "open");
   }
 
   /** Lets the person pick a model, then shows that model's storyline (a saved one when there is one). */
@@ -209,9 +220,9 @@ export class StorylinePanel {
       if (mode === "open" && best) return this.show({ ...base, version: best });
     }
 
-    const apiKey = this.apiKey();
+    const apiKey = await this.keys.get();
     if (!apiKey) {
-      this.setStatus({ type: "error", fileName, message: "Add your Anthropic API key to start.", action: "settings" });
+      this.setStatus({ type: "error", fileName, message: "Add your Anthropic API key to start.", action: "key" });
       return;
     }
     if (!text.trim()) {
@@ -296,9 +307,9 @@ export class StorylinePanel {
     question = question.trim();
     if (!shown || !block || !question || this.pending) return;
 
-    const apiKey = this.apiKey();
+    const apiKey = await this.keys.get();
     if (!apiKey) {
-      this.post({ type: "answer-error", blockId, question, message: "Add your Anthropic API key first.", action: "settings" });
+      this.post({ type: "answer-error", blockId, question, message: "Add your Anthropic API key first.", action: "key" });
       return;
     }
 

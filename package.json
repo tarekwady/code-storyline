@@ -41,6 +41,16 @@
         "command": "codestoryline.chooseModel",
         "title": "Choose Model",
         "category": "Code Storyline"
+      },
+      {
+        "command": "codestoryline.setApiKey",
+        "title": "Set API Key",
+        "category": "Code Storyline"
+      },
+      {
+        "command": "codestoryline.removeApiKey",
+        "title": "Remove API Key",
+        "category": "Code Storyline"
       }
     ],
     "menus": {
@@ -58,7 +68,8 @@
           "type": "string",
           "default": "",
           "scope": "application",
-          "markdownDescription": "Your Anthropic API key (get one at [console.anthropic.com](https://console.anthropic.com/)). Stored in your user settings only. If empty, the `ANTHROPIC_API_KEY` environment variable is used."
+          "markdownDescription": "No longer used: settings are stored as plain text.",
+          "markdownDeprecationMessage": "Don't put your key here: settings are plain text and may be synced. Run [Code Storyline: Set API Key](command:codestoryline.setApiKey) instead, which keeps it in VS Code's encrypted storage. A key found here is moved there automatically."
         },
         "codestoryline.model": {
           "type": "string",

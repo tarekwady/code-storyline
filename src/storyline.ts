@@ -106,8 +106,8 @@ const STORYLINE_TOOL: Anthropic.Beta.Messages.BetaTool = {
   },
 };
 
-/** What the webview should offer next to an error message. */
-export type ErrorAction = "settings" | "retry";
+/** What the webview offers next to an error message: set the API key, choose another model, or try again. */
+export type ErrorAction = "key" | "model" | "retry";
 
 export class StorylineError extends Error {
   constructor(
@@ -291,10 +291,10 @@ function normalize(input: unknown, lineCount: number): Storyline {
 
 function toStorylineError(err: unknown): Error {
   if (err instanceof Anthropic.AuthenticationError) {
-    return new StorylineError("Your Anthropic API key was rejected.", "settings");
+    return new StorylineError("Your Anthropic API key was rejected.", "key");
   }
   if (err instanceof Anthropic.NotFoundError) {
-    return new StorylineError("That Claude model wasn't found. Check the model setting.", "settings");
+    return new StorylineError("That Claude model wasn't found.", "model");
   }
   if (err instanceof Anthropic.RateLimitError) {
     return new StorylineError("Too many requests right now. Wait a moment, then try again.");

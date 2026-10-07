@@ -22,7 +22,7 @@ npm install
 2. Press **F5** (or open **Run and Debug** and pick **Run Extension**).
    This runs the `build` task, then launches an **Extension Development Host**, a second VS Code window with your local copy of the extension loaded. Your other installed extensions are disabled in that window so they can't interfere. It runs without the debugger, because on some machines attaching the debugger crashes that window a second after it opens.
 3. In the Extension Development Host:
-   - Set `codestoryline.apiKey` in its user settings (or start VS Code with `ANTHROPIC_API_KEY` set in your environment).
+   - Run **Code Storyline: Set API Key** and paste your key (or start VS Code with `ANTHROPIC_API_KEY` set in your environment). The key is stored in VS Code's secret storage; never put it in a settings file.
    - Open any source file and run **Show Code Storyline** from the Command Palette.
 4. For breakpoints, pick **Debug Extension** in the **Run and Debug** view instead, then set breakpoints in `src/*.ts` in the original window; source maps map them to the bundle. If that window closes by itself right after opening, the debugger is crashing it on your machine: use **Run Extension** and `console.log`, and read the output in the test window with **Developer: Toggle Developer Tools** → **Console**.
 5. After changing code, rebuild (`npm run build`, or keep `npm run watch` running) and reload the Extension Development Host with **Developer: Reload Window** (`Ctrl+R` / `Cmd+R`).
@@ -44,6 +44,7 @@ The diagram is a webview, so its code (`media/main.js`, `media/main.css`) runs i
 | `src/storyline.ts` | Claude API calls: the storyline (prompt, tool schema, validation) and streamed follow-up answers |
 | `src/store.ts` | Saved storylines with history: one JSON file per source file in the extension's global storage, the last 10 versions each, with the file text and the follow-up questions |
 | `src/models.ts` | The model list and picker |
+| `src/apiKey.ts` | The Anthropic API key in VS Code's encrypted secret storage: set, remove, and moving an old key out of settings |
 | `media/main.js` | Webview: card layout, code blocks, the arrows (plain SVG), canvas move and zoom, the ask panel |
 | `src/webview/highlight.ts` | Syntax highlighting for the code blocks (Prism), bundled to `dist/highlight.js` for the webview |
 | `media/main.css` | Webview styles and design tokens (light, dark, high contrast) |

@@ -164,7 +164,7 @@
   /**
    * One mono line, at most one underlined action, or a loading row of placeholder cards.
    * @param {string} text
-   * @param {string | null} action "settings" | "retry"
+   * @param {string | null} action "key" | "model" | "retry" | "make"
    * @param {boolean} loading
    */
   function showState(text, action, loading) {
@@ -189,13 +189,22 @@
     stateEl.appendChild(line);
   }
 
+  /** The one action after a state or error line. */
+  const ACTIONS = {
+    key: { label: "set api key", message: "set-key" },
+    model: { label: "choose a model", message: "choose-model" },
+    make: { label: "make a storyline", message: "regenerate" },
+    retry: { label: "try again", message: "regenerate" },
+  };
+
   /** @param {string} action */
   function actionButton(action) {
+    const { label, message } = ACTIONS[/** @type {keyof typeof ACTIONS} */ (action)] || ACTIONS.retry;
     const button = document.createElement("button");
     button.type = "button";
     button.className = "text-action";
-    button.textContent = action === "settings" ? "open settings" : action === "make" ? "make a storyline" : "try again";
-    button.addEventListener("click", () => vscode.postMessage({ type: action === "settings" ? "open-settings" : "regenerate" }));
+    button.textContent = label;
+    button.addEventListener("click", () => vscode.postMessage({ type: message }));
     return button;
   }
 
@@ -741,18 +750,18 @@
     if (failed && failed.blockId === selectedId) {
       append(threadEl, "p", "q is-failed", failed.question);
       const line = append(threadEl, "p", "a-error", failed.message.toLowerCase() + " ");
-      const retry = document.createElement("button");
-      retry.type = "button";
-      retry.className = "text-action";
-      if (failed.action === "settings") {
-        retry.textContent = "open settings";
-        retry.addEventListener("click", () => vscode.postMessage({ type: "open-settings" }));
+      if (failed.action && failed.action !== "retry") {
+        line.appendChild(actionButton(failed.action));
       } else {
+        // Trying again re-asks the same question here, rather than remaking the storyline.
+        const retry = document.createElement("button");
+        retry.type = "button";
+        retry.className = "text-action";
         retry.textContent = "try again";
         const question = failed.question;
         retry.addEventListener("click", () => send(question));
+        line.appendChild(retry);
       }
-      line.appendChild(retry);
     }
     if (scrollToEnd) askScroll.scrollTop = askScroll.scrollHeight;
   }
